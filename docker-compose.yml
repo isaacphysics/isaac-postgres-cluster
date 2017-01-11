@@ -1,0 +1,33 @@
+version: "2"
+services:
+  postgres:
+    image: postgres:9.6.0
+    network:
+      isaac:
+        ipv4_address: "${LOCAL_POSTGRES}"
+    extra_hosts:
+    - "remote-pg:${REMOTE_POSTGRES}"
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: passw0rd
+
+  postgres-create-standby:
+    image: postgres:9.6.0
+    network:
+      isaac:
+        ipv4_address: "${LOCAL_POSTGRES}"
+    extra_hosts:
+    - "remote-pg:${REMOTE_POSTGRES}"
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./recovery.conf:/recovery.conf
+    command: /bin/sh -c "rm -rf /var/lib/postgresql/data/* && pg_basebackup -h remote-pg -D /var/lib/postgresql/data -U user -v -P && cp /recovery.conf /var/lib/postgresql/data/recovery.conf"
+
+volumes:
+  data:
+    external:
+      name: live-db-data
