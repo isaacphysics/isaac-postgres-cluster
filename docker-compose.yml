@@ -2,7 +2,7 @@ version: "2"
 services:
   postgres:
     image: postgres:9.6.0
-    network:
+    networks:
       isaac:
         ipv4_address: "${LOCAL_POSTGRES}"
     extra_hosts:
@@ -15,9 +15,18 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: passw0rd
 
+  postgres-create-master:
+    image: postgres:9.6.0
+    volumes:
+      - data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: passw0rd
+    command: postgres -V   
+
   postgres-create-standby:
     image: postgres:9.6.0
-    network:
+    networks:
       isaac:
         ipv4_address: "${LOCAL_POSTGRES}"
     extra_hosts:
@@ -31,3 +40,7 @@ volumes:
   data:
     external:
       name: live-db-data
+
+networks:
+  isaac:
+    external: true
