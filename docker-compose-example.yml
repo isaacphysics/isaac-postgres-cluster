@@ -1,0 +1,23 @@
+version: "2"
+services:
+  postgres:
+    image: daviesian/ubuntu
+    extra_hosts:
+    - "remote_pg:${REMOTE_POSTGRES}"
+    networks:
+      isaac:
+        ipv4_address: "${LOCAL_POSTGRES}"
+    command: ["ping", "remote_pg"]
+  ping:
+    image: daviesian/ubuntu
+    extra_hosts:
+    - "elasticsearch:${LOCAL_ELASTICSEARCH}"
+    #- "postgres:${LOCAL_POSTGRES}"
+    networks:
+      isaac:
+    command: ["ping", "postgres"]
+
+networks:
+  isaac:
+    external: true
+      

@@ -2,8 +2,9 @@ version: "2"
 services:
   postgres:
     image: postgres:9.6.0
+    container_name: pg-live
     networks:
-      isaac:
+      default:
         ipv4_address: "${LOCAL_POSTGRES}"
     extra_hosts:
     - "remote-pg:${REMOTE_POSTGRES}"
@@ -12,22 +13,23 @@ services:
       - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
       - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: passw0rd
+      POSTGRES_USER: rutherford
+      POSTGRES_PASSWORD: rutherf0rd
 
-  postgres-create-master:
+  postgres-create-blank-master:
     image: postgres:9.6.0
     volumes:
       - data:/var/lib/postgresql/data
+      - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/isaac-create.sql:ro
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: passw0rd
+      POSTGRES_USER: rutherford
+      POSTGRES_PASSWORD: rutherf0rd
     command: postgres -V   
 
   postgres-create-standby:
     image: postgres:9.6.0
     networks:
-      isaac:
+      default:
         ipv4_address: "${LOCAL_POSTGRES}"
     extra_hosts:
     - "remote-pg:${REMOTE_POSTGRES}"
@@ -42,5 +44,6 @@ volumes:
       name: live-db-data
 
 networks:
-  isaac:
-    external: true
+  default:
+    external:
+      name: isaac
