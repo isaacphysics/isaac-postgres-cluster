@@ -12,7 +12,8 @@ services:
       - data:/var/lib/postgresql/data
       - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
       - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
-      - /local/data/.psql_history:/home/postgres/.psql_history:rw
+      - /local/data/postgres_home:/home/postgres
+      - /local/data/postgres_home_root:/root
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: rutherf0rd
