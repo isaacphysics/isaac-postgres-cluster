@@ -1,7 +1,7 @@
 version: "2"
 services:
   postgres:
-    image: postgres:9.6.0
+    image: postgres:9.6
     container_name: pg-live
     networks:
       default:
@@ -19,7 +19,7 @@ services:
       POSTGRES_PASSWORD: rutherf0rd
 
   postgres-create-blank-master:
-    image: postgres:9.6.0
+    image: postgres:9.6
     volumes:
       - data:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
@@ -30,7 +30,7 @@ services:
     command: postgres -V   
 
   postgres-create-standby:
-    image: postgres:9.6.0
+    image: postgres:9.6
     networks:
       default:
         ipv4_address: "${LOCAL_POSTGRES}"
