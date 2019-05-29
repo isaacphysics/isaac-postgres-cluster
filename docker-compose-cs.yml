@@ -1,6 +1,6 @@
 version: "2"
 services:
-  postgres:
+  cs-pg:
     image: postgres:11
     container_name: cs-pg-live
     networks:
@@ -18,7 +18,7 @@ services:
       POSTGRES_USER: "rutherford"
       POSTGRES_PASSWORD: "${CS_POSTGRES_PASSWORD}"
 
-  postgres-create-blank-master:
+  cs-pg-create-blank-master:
     image: postgres:11
     volumes:
       - data:/var/lib/postgresql/data
@@ -30,7 +30,7 @@ services:
       POSTGRES_PASSWORD: "${CS_POSTGRES_PASSWORD}"
     command: postgres -V
 
-  postgres-create-standby:
+  cs-pg-create-standby:
     image: postgres:11
     networks:
       default:
