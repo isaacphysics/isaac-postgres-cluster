@@ -1,13 +1,13 @@
 version: "2"
 services:
-  postgres:
-    image: postgres:9.6
-    container_name: pg-live
+  phy-pg:
+    image: postgres:11
+    container_name: phy-pg-live
     networks:
       default:
-        ipv4_address: "${LOCAL_POSTGRES}"
+        ipv4_address: "${LOCAL_PHY_POSTGRES_IP}"
     extra_hosts:
-    - "remote-pg:${REMOTE_POSTGRES}"
+    - "remote-pg:${REMOTE_PHY_POSTGRES_IP}"
     volumes:
       - data:/var/lib/postgresql/data
       - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
@@ -16,26 +16,27 @@ services:
       - /local/data/postgres_home_root:/root
     environment:
       POSTGRES_USER: rutherford
-      POSTGRES_PASSWORD: rutherf0rd
+      POSTGRES_PASSWORD: "${PHY_POSTGRES_PASSWORD}"
 
-  postgres-create-blank-master:
-    image: postgres:9.6
+  phy-pg-create-blank-master:
+    image: postgres:11
     volumes:
       - data:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
+      - ../isaac-api/src/main/resources/db_scripts/quartz_scheduler_create_script.sql:/docker-entrypoint-initdb.d/02-isaac-quartz.sql:ro
     environment:
       POSTGRES_USER: rutherford
-      POSTGRES_PASSWORD: rutherf0rd
+      POSTGRES_PASSWORD: "${PHY_POSTGRES_PASSWORD}"
     command: postgres -V   
 
-  postgres-create-standby:
-    image: postgres:9.6
+  phy-pg-create-standby:
+    image: postgres:11
     networks:
       default:
-        ipv4_address: "${LOCAL_POSTGRES}"
+        ipv4_address: "${LOCAL_PHY_POSTGRES_IP}"
     extra_hosts:
-    - "remote-pg:${REMOTE_POSTGRES}"
+    - "remote-pg:${REMOTE_PHY_POSTGRES_IP}"
     volumes:
       - data:/var/lib/postgresql/data
       - ./recovery.conf:/recovery.conf
@@ -44,7 +45,7 @@ services:
 volumes:
   data:
     external:
-      name: live-db-data
+      name: phy-live-db-data
 
 networks:
   default:
