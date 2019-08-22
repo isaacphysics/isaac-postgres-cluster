@@ -3,6 +3,7 @@ services:
   cs-pg:
     image: postgres:11
     container_name: cs-pg-live
+    shm_size: 256M
     networks:
       default:
         ipv4_address: "${LOCAL_CS_POSTGRES_IP}"

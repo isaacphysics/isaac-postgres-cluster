@@ -3,6 +3,7 @@ services:
   phy-pg:
     image: postgres:11
     container_name: phy-pg-live
+    shm_size: 256M
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_POSTGRES_IP}"
