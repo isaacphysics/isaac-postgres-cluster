@@ -46,7 +46,7 @@ services:
 volumes:
   data:
     external:
-      name: phy-live-db-data
+      name: phy-live-db-data-2020
 
 networks:
   default:
