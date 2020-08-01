@@ -46,7 +46,7 @@ services:
 volumes:
   data:
     external:
-      name: cs-live-db-data-2020
+      name: cs-live-db-data-pg12
 
 networks:
   default:
