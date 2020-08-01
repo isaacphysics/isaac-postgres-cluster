@@ -40,7 +40,7 @@ services:
     - "remote-pg:${REMOTE_PHY_POSTGRES_IP}"
     volumes:
       - data:/var/lib/postgresql/data
-    command: /bin/sh -c "rm -rf /var/lib/postgresql/data/* && pg_basebackup -P -h remote-pg -D /var/lib/postgresql/data -U rutherford -v -P && cp /var/lib/postgresql/data/standby.signal"
+    command: /bin/sh -c "rm -rf /var/lib/postgresql/data/* && pg_basebackup -P -h remote-pg -D /var/lib/postgresql/data -U rutherford -v -P && touch /var/lib/postgresql/data/standby.signal"
 
 volumes:
   data:
