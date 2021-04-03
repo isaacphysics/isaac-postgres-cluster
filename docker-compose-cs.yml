@@ -1,7 +1,7 @@
 version: "2"
 services:
   cs-pg:
-    image: postgres:12
+    image: postgres:13
     container_name: cs-pg-live
     shm_size: 256M
     networks:
@@ -20,7 +20,7 @@ services:
       POSTGRES_PASSWORD: "${CS_POSTGRES_PASSWORD}"
 
   cs-pg-create-blank-master:
-    image: postgres:12
+    image: postgres:13
     volumes:
       - data:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
@@ -32,7 +32,7 @@ services:
     command: postgres -V
 
   cs-pg-create-standby:
-    image: postgres:12
+    image: postgres:13
     networks:
       default:
         ipv4_address: "${LOCAL_CS_POSTGRES_IP}"
@@ -45,7 +45,7 @@ services:
 volumes:
   data:
     external:
-      name: cs-live-db-data-pg12
+      name: cs-live-db-data-pg13
 
 networks:
   default:
