@@ -18,6 +18,7 @@ services:
     environment:
       POSTGRES_USER: "rutherford"
       POSTGRES_PASSWORD: "${CS_POSTGRES_PASSWORD}"
+    restart: unless-stopped
 
   cs-pg-create-blank-master:
     image: postgres:13

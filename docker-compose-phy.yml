@@ -18,6 +18,7 @@ services:
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: "${PHY_POSTGRES_PASSWORD}"
+    restart: unless-stopped
 
   phy-pg-create-blank-master:
     image: postgres:13
