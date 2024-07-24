@@ -1,14 +1,14 @@
 version: "2"
 services:
   ada-pg:
-    image: postgres:13
+    image: postgres:16
     container_name: ada-pg-live
     shm_size: 256M
     networks:
       default:
         ipv4_address: "${LOCAL_ADA_POSTGRES_IP}"
     extra_hosts:
-    - "remote-pg:${REMOTE_ADA_POSTGRES_IP}"
+      - "remote-pg:${REMOTE_ADA_POSTGRES_IP}"
     volumes:
       - data:/var/lib/postgresql/data
       - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
   ada-pg-create-blank-master:
-    image: postgres:13
+    image: postgres:16
     volumes:
       - data:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
@@ -33,22 +33,22 @@ services:
     command: postgres -V
 
   ada-pg-create-standby:
-    image: postgres:13
+    image: postgres:16
     networks:
       default:
         ipv4_address: "${LOCAL_ADA_POSTGRES_IP}"
     extra_hosts:
-    - "remote-pg:${REMOTE_ADA_POSTGRES_IP}"
+      - "remote-pg:${REMOTE_ADA_POSTGRES_IP}"
     volumes:
       - data:/var/lib/postgresql/data
     command: /bin/sh -c "rm -rf /var/lib/postgresql/data/* && pg_basebackup -P -h remote-pg -D /var/lib/postgresql/data -U rutherford -v -P && touch /var/lib/postgresql/data/standby.signal"
 
 volumes:
   data:
-    external:
-      name: ada-live-db-data-pg13
+    name: ada-live-db-data-pg16
+    external: true
 
 networks:
   default:
-    external:
-      name: isaac
+    name: isaac
+    external: true
