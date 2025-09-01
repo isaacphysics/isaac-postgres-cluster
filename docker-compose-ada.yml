@@ -1,7 +1,7 @@
 version: "2"
 services:
   ada-pg:
-    image: postgres:16
+    image: postgres:16-bookworm
     container_name: ada-pg-live
     shm_size: 256M
     networks:
@@ -21,7 +21,7 @@ services:
     restart: unless-stopped
 
   ada-pg-create-blank-master:
-    image: postgres:16
+    image: postgres:16-bookworm
     volumes:
       - data:/var/lib/postgresql/data
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
@@ -33,7 +33,7 @@ services:
     command: postgres -V
 
   ada-pg-create-standby:
-    image: postgres:16
+    image: postgres:16-bookworm
     networks:
       default:
         ipv4_address: "${LOCAL_ADA_POSTGRES_IP}"
