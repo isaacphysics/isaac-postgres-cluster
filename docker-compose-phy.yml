@@ -1,18 +1,17 @@
-version: "2"
 services:
   phy-pg:
-    image: postgres:16-bookworm
+    image: postgres:18
     container_name: phy-pg-live
-    shm_size: 256M
+    shm_size: 512M
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_POSTGRES_IP}"
     extra_hosts:
       - "remote-pg:${REMOTE_PHY_POSTGRES_IP}"
     volumes:
-      - data:/var/lib/postgresql/data
-      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
-      - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - data:/var/lib/postgresql
+      - ./pg_hba.conf:/var/lib/postgresql/pg_hba.conf
+      - ./postgresql.conf:/var/lib/postgresql/postgresql.conf
       - /local/data/postgres_home:/home/postgres
       - /local/data/postgres_home_root:/root
     environment:
@@ -21,9 +20,9 @@ services:
     restart: unless-stopped
 
   phy-pg-create-blank-master:
-    image: postgres:16-bookworm
+    image: postgres:18
     volumes:
-      - data:/var/lib/postgresql/data
+      - data:/var/lib/postgresql
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/quartz_scheduler_create_script.sql:/docker-entrypoint-initdb.d/02-isaac-quartz.sql:ro
@@ -33,19 +32,19 @@ services:
     command: postgres -V
 
   phy-pg-create-standby:
-    image: postgres:16-bookworm
+    image: postgres:18
     networks:
       default:
         ipv4_address: "${LOCAL_PHY_POSTGRES_IP}"
     extra_hosts:
       - "remote-pg:${REMOTE_PHY_POSTGRES_IP}"
     volumes:
-      - data:/var/lib/postgresql/data
-    command: /bin/sh -c "rm -rf /var/lib/postgresql/data/* && pg_basebackup -P -h remote-pg -D /var/lib/postgresql/data -U rutherford -v -P && touch /var/lib/postgresql/data/standby.signal"
+      - data:/var/lib/postgresql
+    command: /bin/sh -c "rm -rf /var/lib/postgresql/* && pg_basebackup -P -h remote-pg -D /var/lib/postgresql -U rutherford -v -P && touch /var/lib/postgresql/standby.signal"
 
 volumes:
   data:
-    name: phy-live-db-data-pg16
+    name: phy-live-db-data-pg18
     external: true
 
 networks:
