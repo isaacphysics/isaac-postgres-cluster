@@ -7,7 +7,7 @@ services:
       default:
         ipv4_address: "${LOCAL_SCI_POSTGRES_IP}"
     volumes:
-      - data:/var/lib/postgresql
+      - /isaac/sci-live-db-pg18:/var/lib/postgresql
       - ./pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
       - ./postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
       - /local/data/postgres_home_root:/root:rw
@@ -19,7 +19,7 @@ services:
   sci-pg-create-blank-master:
     image: postgres:18
     volumes:
-      - data:/var/lib/postgresql
+      - /isaac/sci-live-db-pg18:/var/lib/postgresql
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-create-script.sql:/docker-entrypoint-initdb.d/00-isaac-create.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/postgres-rutherford-functions.sql:/docker-entrypoint-initdb.d/01-isaac-functions.sql:ro
       - ../isaac-api/src/main/resources/db_scripts/quartz_scheduler_create_script.sql:/docker-entrypoint-initdb.d/02-isaac-quartz.sql:ro
@@ -34,13 +34,8 @@ services:
       default:
         ipv4_address: "${LOCAL_SCI_POSTGRES_IP}"
     volumes:
-      - data:/var/lib/postgresql
+      - /isaac/sci-live-db-pg18:/var/lib/postgresql
     command: /bin/sh -c "rm -rf /var/lib/postgresql/* && pg_basebackup -P -h ${REMOTE_SERVER_IP} -p ${REMOTE_SCI_POSTGRES_PORT} -D /var/lib/postgresql -U rutherford -v -P && touch /var/lib/postgresql/standby.signal"
-
-volumes:
-  data:
-    name: sci-live-db-data-pg18
-    external: true
 
 networks:
   default:
