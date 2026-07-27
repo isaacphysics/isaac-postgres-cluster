@@ -11,6 +11,7 @@ services:
       - ./pg_hba.conf:/var/lib/postgresql/18/docker/pg_hba.conf:ro
       - ./postgresql.conf:/var/lib/postgresql/18/docker/postgresql.conf:ro
       - /local/data/postgres/sci-service.conf:/etc/postgresql-common/pg_service.conf:ro
+      - /local/data/postgres/sci-keys:/keys:ro
       - /local/data/postgres_home_root:/root:rw
     restart: unless-stopped
 
@@ -32,6 +33,7 @@ services:
         ipv4_address: "${LOCAL_SCI_POSTGRES_IP}"
     volumes:
       - /isaac/sci-live-db-pg18:/var/lib/postgresql
+      - /local/data/postgres/sci-keys:/keys:ro
     command: /bin/sh -c "rm -rf /var/lib/postgresql/* && pg_basebackup -P -h ${REMOTE_SERVER_IP} -p ${REMOTE_SCI_POSTGRES_PORT} -D /var/lib/postgresql -U rutherford -v -P && touch /var/lib/postgresql/standby.signal"
 
 networks:
