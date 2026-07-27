@@ -8,8 +8,8 @@ services:
         ipv4_address: "${LOCAL_ADA_POSTGRES_IP}"
     volumes:
       - /isaac/ada-live-db-pg18:/var/lib/postgresql
-      - ./pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
-      - ./postgresql.conf:/var/lib/postgresql/postgresql.conf:ro
+      - ./pg_hba.conf:/var/lib/postgresql/18/docker/pg_hba.conf:ro
+      - ./postgresql.conf:/var/lib/postgresql/18/docker/postgresql.conf:ro
       - /local/data/postgres_home_root:/root:rw
     environment:
       PGHOSTADDR: "${REMOTE_SERVER_IP}"
