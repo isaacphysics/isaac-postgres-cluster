@@ -26,7 +26,6 @@ services:
     environment:
       POSTGRES_USER: "rutherford"
       POSTGRES_PASSWORD: "${ADA_POSTGRES_PASSWORD}"
-    command: postgres -V
 
   ada-pg-create-standby:
     image: postgres:18

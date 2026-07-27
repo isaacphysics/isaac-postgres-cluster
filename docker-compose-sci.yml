@@ -26,7 +26,6 @@ services:
     environment:
       POSTGRES_USER: rutherford
       POSTGRES_PASSWORD: "${SCI_POSTGRES_PASSWORD}"
-    command: postgres -V
 
   sci-pg-create-standby:
     image: postgres:18
